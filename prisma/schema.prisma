@@ -1,0 +1,19 @@
+datasource db {
+    provider                = "mysql"
+    url                     = env("DATABASE_URL")
+    referentialIntegrity    = "prisma"
+}
+
+generator js {
+    provider    = "prisma-client-js"
+    previewFeatures = ["referentialIntegrity"]
+}
+
+model Urls {
+    id          Int         @id @default(autoincrement())
+    createdAt   DataTime    @default(now())
+    url         String      @db.VarChar(4096)
+    slug        String      @unique         
+
+    @@index([slug])
+}

@@ -9,7 +9,7 @@ generator js {
     previewFeatures = ["referentialIntegrity"]
 }
 
-model Urls {
+model Url {
     id          Int         @id @default(autoincrement())
     createdAt   DataTime    @default(now())
     url         String      @db.VarChar(4096)

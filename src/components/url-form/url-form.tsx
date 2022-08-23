@@ -12,7 +12,6 @@ function UrlForm() {
   const slugAvailable = trpc.useQuery(["fetchUrl", { slug: urlObject.slug }]);
 
   const addUrl = trpc.useMutation(["addUrl"]);
-  console.log(addUrl.status);
 
   return(
     <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {

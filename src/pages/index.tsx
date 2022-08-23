@@ -1,6 +1,8 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 
+import UrlForm from '../components/url-form';
+
 const Home: NextPage = () => {
   return (
     <div>
@@ -16,6 +18,7 @@ const Home: NextPage = () => {
 
       <main className="bg-black min-h-screen grid place-items-center">
         <h1 className="font-glassTTYVT220 text-white text-[80px]">СЖАТО</h1>
+        <UrlForm />
       </main>
     </div>
   );

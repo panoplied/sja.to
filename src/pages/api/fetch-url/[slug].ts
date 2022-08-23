@@ -5,7 +5,7 @@ import { prisma } from '../../../db/prisma-client';
 async function fetchUrl (req: NextApiRequest, res: NextApiResponse) {
   const slug = req.query["slug"];
 
-  if (typeof slug !== "string" || !slug) {
+  if (!slug || typeof slug !== "string") {
     res.status(404).json({ message: "No slug sent. Please provide a slug to dereference saved URL."});
     return;
   }
@@ -26,7 +26,7 @@ async function fetchUrl (req: NextApiRequest, res: NextApiResponse) {
     // RFC2616 recommends delta of one year or 31536000 seconds a maximum s-maxage
     res.setHeader("Cache-Control", "s-maxage=31536000, stale-while-revalidate");
 
-    res.status(404).json({ message: "No short URL for this slug found." });
+    res.status(404).json({ message: `No short URL for '${slug}' found.` });
 
     return;
   }

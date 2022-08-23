@@ -16,7 +16,6 @@ export const appRouter = trpc
           },
         },
       });
-
       return { used: urlCount > 0 };
     },
   })

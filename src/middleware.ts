@@ -8,7 +8,8 @@ export async function middleware(req: NextRequest) {
   // Exclude all paths except slugs (hopefully)
   const shouldExecute: Boolean = !(
     path.includes('.') ||
-    path === "/" 
+    path === "/" ||
+    path.startsWith("/api/")
   );
 
   if (shouldExecute) {

@@ -8,3 +8,185 @@
   font-weight: normal;
   src: local(""), url("/fonts/Glass_TTY_VT220.ttf") format("truetype");
 }
+
+.crtFont {
+  font-family: "Glass TTY VT220";
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.slate {
+  color: theme(colors.slate.400);
+  text-shadow:
+    0 0 1px theme(colors.slate.400),
+    0 0 2px theme(colors.slate.400),
+    0 0 4px theme(colors.slate.400);
+}
+
+.gray {
+  color: theme(colors.gray.400);
+  text-shadow:
+    0 0 1px theme(colors.gray.400),
+    0 0 2px theme(colors.gray.400),
+    0 0 4px theme(colors.gray.400);
+}
+
+.zinc {
+  color: theme(colors.zinc.400);
+  text-shadow:
+    0 0 1px theme(colors.zinc.400),
+    0 0 2px theme(colors.zinc.400),
+    0 0 4px theme(colors.zinc.400);
+}
+
+.neutral {
+  color: theme(colors.neutral.400);
+  text-shadow:
+    0 0 1px theme(colors.neutral.400),
+    0 0 2px theme(colors.neutral.400),
+    0 0 4px theme(colors.neutral.400);
+}
+
+.stone {
+  color: theme(colors.stone.400);
+  text-shadow:
+    0 0 1px theme(colors.stone.400),
+    0 0 2px theme(colors.stone.400),
+    0 0 4px theme(colors.stone.400);
+}
+
+.red {
+  color: theme(colors.red.600);
+  text-shadow:
+    0 0 1px theme(colors.red.600),
+    0 0 2px theme(colors.red.600),
+    0 0 4px theme(colors.red.600);
+}
+
+.orange {
+  color: theme(colors.orange.500);
+  text-shadow:
+    0 0 1px theme(colors.orange.500),
+    0 0 2px theme(colors.orange.500),
+    0 0 4px theme(colors.orange.500);
+}
+
+.amber {
+  color: theme(colors.amber.400);
+  text-shadow:
+    0 0 1px theme(colors.amber.400),
+    0 0 2px theme(colors.amber.400),
+    0 0 4px theme(colors.amber.400);
+}
+
+.yellow {
+  color: theme(colors.yellow.500);
+  text-shadow:
+    0 0 1px theme(colors.yellow.500),
+    0 0 2px theme(colors.yellow.500),
+    0 0 4px theme(colors.yellow.500);
+}
+
+.lime {
+  color: theme(colors.lime.500);
+  text-shadow:
+    0 0 1px theme(colors.lime.500),
+    0 0 2px theme(colors.lime.500),
+    0 0 4px theme(colors.lime.500);
+}
+
+.green {
+  color: theme(colors.green.400);
+  text-shadow:
+    0 0 1px theme(colors.green.400),
+    0 0 2px theme(colors.green.400),
+    0 0 4px theme(colors.green.400);
+}
+
+.emerald {
+  color: theme(colors.emerald.400);
+  text-shadow:
+    0 0 1px theme(colors.emerald.400),
+    0 0 2px theme(colors.emerald.400),
+    0 0 4px theme(colors.emerald.400);
+}
+
+.teal {
+  color: theme(colors.teal.400);
+  text-shadow:
+    0 0 1px theme(colors.teal.400),
+    0 0 2px theme(colors.teal.400),
+    0 0 4px theme(colors.teal.400);
+}
+
+.cyan {
+  color: theme(colors.cyan.400);
+  text-shadow:
+    0 0 1px theme(colors.cyan.400),
+    0 0 2px theme(colors.cyan.400),
+    0 0 4px theme(colors.cyan.400);
+}
+
+.sky {
+  color: theme(colors.sky.400);
+  text-shadow:
+    0 0 1px theme(colors.sky.400),
+    0 0 2px theme(colors.sky.400),
+    0 0 4px theme(colors.sky.400);
+}
+
+.blue {
+  color: theme(colors.blue.500);
+  text-shadow:
+    0 0 1px theme(colors.blue.500),
+    0 0 2px theme(colors.blue.500),
+    0 0 4px theme(colors.blue.500);
+}
+
+.indigo {
+  color: theme(colors.indigo.400);
+  text-shadow:
+    0 0 1px theme(colors.indigo.400),
+    0 0 2px theme(colors.indigo.400),
+    0 0 4px theme(colors.indigo.400);
+}
+
+.violet {
+  color: theme(colors.violet.400);
+  text-shadow:
+    0 0 1px theme(colors.violet.400),
+    0 0 2px theme(colors.violet.400),
+    0 0 4px theme(colors.violet.400);
+}
+
+.purple {
+  color: theme(colors.purple.400);
+  text-shadow:
+    0 0 1px theme(colors.purple.400),
+    0 0 2px theme(colors.purple.400),
+    0 0 4px theme(colors.purple.400);
+}
+
+.fuchsia {
+  color: theme(colors.fuchsia.500);
+  text-shadow:
+    0 0 1px theme(colors.fuchsia.500),
+    0 0 2px theme(colors.fuchsia.500),
+    0 0 4px theme(colors.fuchsia.500);
+}
+
+.pink {
+  color: theme(colors.pink.500);
+  text-shadow:
+    0 0 1px theme(colors.pink.500),
+    0 0 2px theme(colors.pink.500),
+    0 0 4px theme(colors.pink.500);
+}
+
+.rose {
+  color: theme(colors.rose.500);
+  text-shadow:
+    0 0 1px theme(colors.rose.500),
+    0 0 2px theme(colors.rose.500),
+    0 0 4px theme(colors.rose.500);
+}

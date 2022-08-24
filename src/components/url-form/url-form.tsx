@@ -14,22 +14,35 @@ function UrlForm() {
   const addUrl = trpc.useMutation(["addUrl"]);
 
   return(
-    <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+    <form
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       addUrl.mutate({...urlObject});
-    }}>
+    }}
+      className="crtFont"
+    >
+      <p className="slate">URL</p>
       <input
         type="text"
-        onChange={e => setUrlObject({...urlObject, slug: e.target.value.toLowerCase()})}
+        onChange={e => setUrlObject({...urlObject, url: e.target.value})}
+        value={urlObject.url}
+        required
+        className="bg-stone-900 emerald p-[10px]"
+      /><br /><br />
+      <p className="slate">SLUG</p>
+      <input
+        type="text"
+        onChange={e => setUrlObject({...urlObject, slug: e.target.value})}
         value={urlObject.slug}
         required
+        className="bg-stone-900 emerald p-[10px]"
       />
+      <br /><br />
       <input
-        type="text"
-        onChange={e=> setUrlObject({...urlObject, url: e.target.value})}
-        value={urlObject.url}
+        type="submit"
+        value="ADD URL"
+        className="bg-emerald-900 emerald p-[10px]"
       />
-      <input type="submit" value="add url" />
     </form>
   );
 }

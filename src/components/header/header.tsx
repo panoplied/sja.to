@@ -24,6 +24,9 @@ function Header() {
           {' '}<span className="amber">TESTING</span> {' '}
           <ASCIIAnimation frames={animRight} rate={300} />
         </h1>
+        <h2 className="crtFont slate">
+          The URL shortener
+        </h2>
     </>
   );
 }

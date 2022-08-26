@@ -17,7 +17,7 @@ const Home: NextPage = () => {
         <link rel="preload" href="/fonts/Orden_Regular.woff2" as="font" crossOrigin="anonymous" type="font/woff" />
 
         {/* TODO: make proper favicons for everything */}
-        <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
       </Head>
 
       <main className="bg-black min-h-screen grid place-items-center">

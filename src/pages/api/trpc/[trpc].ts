@@ -9,7 +9,7 @@ export const appRouter = trpc
   .query("fetchUrl", {
     input: z.object({ slug: z.string() }),
     async resolve({ input }) {
-      const urlCount = await prisma.Url.count({
+      const urlCount = await prisma.url.count({
         where: {
           slug: {
             equals: input.slug,
@@ -23,7 +23,7 @@ export const appRouter = trpc
     input: z.object({ slug: z.string(), url: z.string() }),
     async resolve({ input }) {
       try {
-        await prisma.Url.create({
+        await prisma.url.create({
           data: {
             slug: input.slug,
             url: input.url,

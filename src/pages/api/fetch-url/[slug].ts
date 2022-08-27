@@ -10,7 +10,7 @@ async function fetchUrl (req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  const data = await prisma.Url.findFirst({
+  const data = await prisma.url.findFirst({
     where: {
       slug: {
         equals: slug,

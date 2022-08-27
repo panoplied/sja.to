@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function ASCIIAnimation({ frames, rate }: { frames: Array<string>, rate: number }) {
+function ASCIIAnimation({ frames, rate }: { frames: Array<JSX.Element>, rate: number }) {
 
   const animationLength = frames.length - 1;
 

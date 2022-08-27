@@ -14,16 +14,17 @@ const Home: NextPage = () => {
         <meta name="description" content="URL shortener" />
 
         <link rel="preload" href="/fonts/Glass_TTY_VT220.ttf" as="font" crossOrigin="anonymous" type="font/ttf" />
-        <link rel="preload" href="/fonts/Orden_Regular.woff2" as="font" crossOrigin="anonymous" type="font/woff" />
 
         {/* TODO: make proper favicons for everything */}
       <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
       </Head>
 
-      <main className="bg-black min-h-screen grid place-items-center">
+      <main className="bg-black min-h-screen">
         <Scanlines />
-        <Header />
-        <UrlForm />
+        <div className="bg-slate-800 flex flex-col items-center">
+          <Header />
+          <UrlForm />
+        </div>
       </main>
 
     </div>

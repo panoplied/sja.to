@@ -19,13 +19,15 @@ const animRight = [
 function Header() {
   return(
     <>
-        <h1 className="font-glassTTYVT220 text-[40px]">
+        <h1 className="mt-4 font-glassTTYVT220 text-[40px]">
           <ASCIIAnimation frames={animLeft} rate={300} />
-          {' '}<span className="amber">TESTING</span> {' '}
+          <span className="font-sans">&nbsp;&nbsp;</span>
+          <span className="amber">СЖАТО</span>
+          <span className="font-sans">&nbsp;&nbsp;</span>
           <ASCIIAnimation frames={animRight} rate={300} />
         </h1>
-        <h2 className="crtFont slate">
-          The URL shortener
+        <h2 className="mt-4 mb-12 crtFont slate">
+          URL shortener
         </h2>
     </>
   );

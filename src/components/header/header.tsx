@@ -26,7 +26,7 @@ function Header() {
           <span className="font-sans">&nbsp;&nbsp;</span>
           <ASCIIAnimation frames={animRight} rate={300} />
         </h1>
-        <h2 className="mt-[10px] mb-[80px] crtFont slate">
+        <h2 className="mt-[10px] mb-[80px] crtFont emerald">
           URL shortener
         </h2>
     </>

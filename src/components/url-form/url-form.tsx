@@ -48,7 +48,7 @@ function UrlForm() {
             }
           `}
           placeholder="ENTER URL"
-          onChange = { debounce(handleURLInput, 300) }
+          onChange = { debounce(handleURLInput, 500) }
           onFocus = { e => { e.target.placeholder = '' } }
           onBlur = { e => { e.target.placeholder = 'ENTER URL' } }
           required
@@ -59,7 +59,7 @@ function UrlForm() {
           value="CONFIRM ->"
           className="p-[10px] mt-[30px] emerald border-2 
           bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer
-          disabled:bg-slate-900 disabled:border-t-slate-700 disabled:border-l-slate-700 disabled:border-b-slate-800 disabled:border-r-slate-800 disabled:text-slate-400 disabled:cursor-not-allowed" 
+          disabled:bg-stone-900 disabled:border-t-stone-700 disabled:border-l-stone-700 disabled:border-b-stone-800 disabled:border-r-stone-800 disabled:text-stone-400 disabled:cursor-not-allowed" 
           disabled = { shortcut.url === '' || !urlInputActivated }
           onClick = { e => { console.log( shortcut.url )}}
         />
@@ -67,14 +67,20 @@ function UrlForm() {
       </form>
 
     );
-  } else {
+  }
+  
+  else {
+    return(
 
-    <form
-      onSubmit = { (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        addUrl.mutate({ ...shortcut });
-      }}
-    />
+      <form
+        onSubmit = { (e: React.FormEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          addUrl.mutate({ ...shortcut });
+        }}
+      >
+      </form>
+
+    );
   }
 
 }

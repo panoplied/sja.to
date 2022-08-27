@@ -11,6 +11,7 @@ function UrlForm() {
 
   const [shortcut, setShortcut] = useState<UrlShortcut>({ url: '', slug: '' });
   const [urlInputActivated, setUrlInputActivated] = useState(false);
+  const [urlConfirmed, setUrlConfirmed] = useState(false);
 
   const addUrl = trpc.useMutation(["addUrl"]);
   // const slugAvailable = trpc.useQuery(["fetchUrl", { slug: shortcut.slug }]);
@@ -32,42 +33,50 @@ function UrlForm() {
     }
   }
 
-  return(
+  if (!urlConfirmed) {
+    return(
+
+      <form className="crtFont flex flex-col" spellCheck="false">
+
+        <input
+          type="text"
+          className={`p-[10px] text-center border-2 bg-black
+            focus:outline-none focus:placeholder-transparent focus:border-emerald-200
+            ${!urlInputActivated || shortcut.url ?
+              ('emerald border-emerald-400 selection:bg-emerald-900 selection:text-emerald-100 caret-emerald-200') :
+              ('red border-red-500 selection:bg-red-900 selection:text-red-100 caret-red-200')
+            }
+          `}
+          placeholder="ENTER URL"
+          onChange = { debounce(handleURLInput, 300) }
+          onFocus = { e => { e.target.placeholder = '' } }
+          onBlur = { e => { e.target.placeholder = 'ENTER URL' } }
+          required
+        />
+
+        <input
+          type="button"
+          value="CONFIRM ->"
+          className="p-[10px] mt-[30px] emerald border-2 
+          bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer
+          disabled:bg-slate-900 disabled:border-t-slate-700 disabled:border-l-slate-700 disabled:border-b-slate-800 disabled:border-r-slate-800 disabled:text-slate-400 disabled:cursor-not-allowed" 
+          disabled = { shortcut.url === '' || !urlInputActivated }
+          onClick = { e => { console.log( shortcut.url )}}
+        />
+
+      </form>
+
+    );
+  } else {
 
     <form
-      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+      onSubmit = { (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         addUrl.mutate({ ...shortcut });
       }}
-      className="crtFont flex flex-col"
-    >
+    />
+  }
 
-      <p className="slate">URL</p>
-      <input
-        type="text"
-        className={`p-[10px]
-          ${!urlInputActivated || shortcut.url ? 'emerald bg-neutral-900' : 'rose bg-neutral-900'}
-       `}
-        onChange = { debounce(handleURLInput, 300) }
-        required
-      />
-
-      <p className="slate">SLUG</p>
-      <input
-        type="text"
-        className="p-[10px] bg-neutral-900" 
-        required
-      />
-
-      <input
-        type="submit"
-        value="ADD URL"
-        className="p-[10px] emerald bg-emerald-900"
-      />
-
-    </form>
-
-  );
 }
 
 export default UrlForm;

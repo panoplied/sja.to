@@ -21,7 +21,7 @@ const Home: NextPage = () => {
 
       <main className="bg-black min-h-screen">
         <Scanlines />
-        <div className="bg-slate-800 flex flex-col items-center">
+        <div className="flex flex-col items-center">
           <Header />
           <UrlForm />
         </div>

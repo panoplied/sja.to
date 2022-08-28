@@ -3,6 +3,9 @@ import debounce from 'debounce';
 import { trpc } from '../../utils/trpc';
 import rndChars from '../../utils/random-chars';
 
+// Renaming this since we have own `generateSlug` function here
+import { generateSlug as rndWords } from 'random-word-slugs';
+
 type UrlShortcut = {
   url: string;
   slug: string;
@@ -59,7 +62,7 @@ function UrlForm() {
 
         // Set real URL state
         // Using random string of chars for the "slug" by default
-        setShortcut({ ...shortcut, url: url, slug: generateSlug('chars') });
+        setShortcut({ ...shortcut, url: url, slug: generateSlug("words") });
 
         // Set urlConfirmed state flag for conditional rendering for the whole form
         setUrlConfirmed(true);
@@ -73,6 +76,8 @@ function UrlForm() {
     let slug = '';
     if (type === "chars") {
       slug = rndChars(8);
+    } else if (type === "words") {
+      slug = rndWords();
     }
     return slug;
   }

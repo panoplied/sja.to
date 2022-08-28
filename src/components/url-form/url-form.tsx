@@ -132,7 +132,7 @@ function UrlForm() {
     const protocol = window.location.protocol;
     const hostname = window.location.hostname;
     const port = window.location.port;
-    const baseURL = `${protocol}//${hostname}:${port ? port : ''}`;
+    const baseURL = `${protocol}//${hostname}${port ? ':' + port : ''}`;
     return(
       <>
       <form

@@ -127,6 +127,12 @@ function UrlForm() {
   else {
     console.log(shortcut.url);
     console.log(shortcut.slug);
+
+    // Combine our baseURL
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    const baseURL = `${protocol}//${hostname}:${port ? port : ''}`;
     return(
       <>
       <form
@@ -137,7 +143,7 @@ function UrlForm() {
         }}
       >
         <div className="p-[10px] text-center border-2 bg-black border-emerald-400 selection:bg-emerald-900 selection:text-emerald-100">
-          <span className="green">https://sja.to/</span>
+          <span className="green">{baseURL}/</span>
           <span>{shortcut.slug}</span>
         </div>
       </form>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { trpc } from '../../utils/trpc';
 import debounce from 'debounce';
+import { trpc } from '../../utils/trpc';
+import rndChars from '../../utils/random-chars';
 
 type UrlShortcut = {
   url: string;
@@ -55,13 +56,25 @@ function UrlForm() {
 
       const url = urlElement.value;
       if (isValidURL(url)) {
+
         // Set real URL state
-        setShortcut({ ...shortcut, url: url });
+        // Using random string of chars for the "slug" by default
+        setShortcut({ ...shortcut, url: url, slug: generateSlug('chars') });
+
         // Set urlConfirmed state flag for conditional rendering for the whole form
         setUrlConfirmed(true);
       }
 
     }
+  }
+
+  // Pseudo-randomly generates "slug" part of the URL (can also be a string of random chars)
+  function generateSlug(type: string) {
+    let slug = '';
+    if (type === "chars") {
+      slug = rndChars(8);
+    }
+    return slug;
   }
 
   if (!urlConfirmed) {
@@ -108,10 +121,11 @@ function UrlForm() {
   
   else {
     console.log(shortcut.url);
+    console.log(shortcut.slug);
     return(
-
+      <>
       <form
-        className="crtFont flex flex-col"
+        className="crtFont flex flex-col emerald"
         onSubmit = { (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           addUrl.mutate({ ...shortcut });
@@ -119,13 +133,15 @@ function UrlForm() {
       >
         <div className="p-[10px] text-center border-2 bg-black border-emerald-400 selection:bg-emerald-900 selection:text-emerald-100">
           <span className="green">https://sja.to/</span>
-          <span className="emerald">slug-part-of-the-url</span>
+          <span>{shortcut.slug}</span>
         </div>
-        {/* <input
-          type="text"
-          className={`p-[10px] text-center border-2 bg-black`}
-        /> */}
       </form>
+
+      <div className="crtFont emerald mt-[20px] text-center">
+        <p>Click shortcut to SAVE and COPY</p>
+        <p>Will redirect to {shortcut.url}</p>
+      </div>
+      </>
 
     );
   }

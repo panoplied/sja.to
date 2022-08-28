@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import debounce from 'debounce';
+import copy from 'copy-to-clipboard';
 import { trpc } from '../../utils/trpc';
 import rndChars from '../../utils/random-chars';
 
@@ -23,9 +24,13 @@ function UrlForm() {
   const [urlInputActivated, setUrlInputActivated] = useState(false);
   const [urlConfirmed, setUrlConfirmed] = useState(false);
 
-  // DB comms
+  // DB comms settings
   const addUrl = trpc.useMutation(["addUrl"]);
-  const slugAvailable = trpc.useQuery(["fetchUrl", { slug: shortcut.slug }]);
+  const checkShortcut = trpc.useQuery(["fetchUrl", { slug: shortcut.slug }], {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
 
   // TODO: implement proper URL validation
@@ -62,7 +67,7 @@ function UrlForm() {
 
         // Set real URL state
         // Using random string of chars for the "slug" by default
-        setShortcut({ ...shortcut, url: url, slug: generateSlug("words") });
+        setShortcut({ ...shortcut, url: url, slug: generateSlug("chars") });
 
         // Set urlConfirmed state flag for conditional rendering for the whole form
         setUrlConfirmed(true);
@@ -81,6 +86,9 @@ function UrlForm() {
     }
     return slug;
   }
+
+
+  // RENDERING
 
   if (!urlConfirmed) {
     return(
@@ -113,6 +121,7 @@ function UrlForm() {
           value="CONFIRM ->"
           className="p-[10px] mt-[30px] emerald border-2 
           focus:outline-none focus:ring-2 focus:ring-emerald-200
+          hover:bg-emerald-800
           active:bg-emerald-700
           bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer
           disabled:bg-stone-900 disabled:border-t-stone-700 disabled:border-l-stone-700 disabled:border-b-stone-800 disabled:border-r-stone-800 disabled:text-stone-400 disabled:cursor-not-allowed" 
@@ -140,17 +149,59 @@ function UrlForm() {
         onSubmit = { (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           addUrl.mutate({ ...shortcut });
+          copy(`${baseURL}/${shortcut.slug}`)
+          console.log(addUrl.status);
         }}
       >
+
         <div className="p-[10px] text-center border-2 bg-black border-emerald-400 selection:bg-emerald-900 selection:text-emerald-100">
           <span className="green">{baseURL}/</span>
           <span>{shortcut.slug}</span>
         </div>
+
+        {/* Regenerate options */}
+        <div>
+          <input
+            type="button"
+            value="CHARS"
+            className="py-[5px] px-[20px] mt-[10px] emerald border-2 mr-[10px]
+            focus:outline-none focus:ring-2 focus:ring-emerald-200
+            hover:bg-emerald-800
+            active:bg-emerald-700
+            bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer"
+            onClick = {() => setShortcut({ ...shortcut, slug: generateSlug("chars") })}
+          />
+          <input
+            type="button"
+            value="WORDS"
+            className="py-[5px] px-[20px] mt-[10px] emerald border-2
+            focus:outline-none focus:ring-2 focus:ring-emerald-200
+            hover:bg-emerald-800
+            active:bg-emerald-700
+            bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer"
+            onClick = {() => setShortcut({ ...shortcut, slug: generateSlug("words") })}
+          />
+        </div>
+
+        {/* Submit, saves to DB */}
+        <input
+          type="submit"
+          value="SAVE ->"
+          className="p-[10px] mt-[30px] emerald border-2 
+          focus:outline-none focus:ring-2 focus:ring-emerald-200
+          hover:bg-emerald-800
+          active:bg-emerald-700
+          bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer
+          disabled:bg-stone-900 disabled:border-t-stone-700 disabled:border-l-stone-700 disabled:border-b-stone-800 disabled:border-r-stone-800 disabled:text-stone-400 disabled:cursor-not-allowed" 
+          disabled = { urlValue === '' || !urlInputActivated }
+        />
+
+
       </form>
 
       <div className="crtFont emerald mt-[20px] text-center">
-        <p>Click shortcut to SAVE and COPY</p>
-        <p>Will redirect to {shortcut.url}</p>
+        {/* <p>Click shortcut to SAVE and COPY</p> */}
+        <p>Points to {shortcut.url}</p>
       </div>
       </>
 

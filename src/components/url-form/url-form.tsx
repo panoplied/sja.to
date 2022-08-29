@@ -7,6 +7,9 @@ import rndChars from '../../utils/random-chars';
 // Renaming this since we have own `generateSlug` function here
 import { generateSlug as rndWords } from 'random-word-slugs';
 
+import fetchUrl from '../../pages/api/fetch-url/[slug]';
+import ASCIIAnimation from '../ascii-animation';
+
 type UrlShortcut = {
   url: string;
   slug: string;
@@ -23,6 +26,7 @@ function UrlForm() {
   // Routine status states
   const [urlInputActivated, setUrlInputActivated] = useState(false);
   const [urlConfirmed, setUrlConfirmed] = useState(false);
+  const [slugGenerating, setSlugGenerating] = useState(false);
 
   // DB comms settings
   const addUrl = trpc.useMutation(["addUrl"]);
@@ -32,6 +36,13 @@ function UrlForm() {
     refetchOnReconnect: false,
   });
 
+  // Frameset for `ASCIIAnimation` component used as progress indicator
+  const progressAnimationFrames = [
+    <> / PROCESSING /</>,
+    <> - PROCESSING -</>,
+    <> \ PROCESSING \</>,
+    <> | PROCESSING |</>,
+  ];
 
   // TODO: implement proper URL validation
   function isValidURL(url: string) {
@@ -78,12 +89,21 @@ function UrlForm() {
 
   // Pseudo-randomly generates "slug" part of the URL (can also be a string of random chars)
   function generateSlug(type: string) {
+
+    setSlugGenerating(true);
+
     let slug = '';
-    if (type === "chars") {
-      slug = rndChars(8);
-    } else if (type === "words") {
-      slug = rndWords();
-    }
+
+    do {
+      if (type === "chars") {
+        slug = rndChars(8);
+      } else if (type === "words") {
+        slug = rndWords();
+      }
+    } while (checkShortcut.data?.used); // Regenerate slug if we have the same one in DB already
+
+    setSlugGenerating(false);
+
     return slug;
   }
 
@@ -94,7 +114,7 @@ function UrlForm() {
     return(
 
       <form
-        className="crtFont flex flex-col"
+        className="crtFont flex flex-col items-center"
         spellCheck="false"
         onSubmit={handleURLConfirm}
       >
@@ -102,14 +122,14 @@ function UrlForm() {
         <input
           type="text"
           id="url"  // Need this ID to get the url in the confirmation handler
-          className={`p-[10px] text-center border-2 bg-black
+          className={`p-[10px] text-center border-2 bg-black xs:w-[300px]
             focus:outline-none focus:placeholder-transparent focus:border-emerald-200 focus:ring-2 focus:ring-emerald-200
             ${!urlInputActivated || urlValue ?
               ('emerald border-emerald-400 selection:bg-emerald-900 selection:text-emerald-100 caret-emerald-200') :
               ('red border-red-500 selection:bg-red-900 selection:text-red-100 caret-red-200')
             }
           `}
-          placeholder="ENTER URL"
+          placeholder="PASTE URL"
           onChange = { debounce(handleURLInput, 500) }
           onFocus = { e => { e.target.placeholder = '' } }
           onBlur = { e => { e.target.placeholder = 'ENTER URL' } }
@@ -119,7 +139,7 @@ function UrlForm() {
         <input
           type="submit"
           value="CONFIRM ->"
-          className="p-[10px] mt-[30px] emerald border-2 
+          className="p-[10px] center mt-[30px] emerald border-2 xs:w-[300px]
           focus:outline-none focus:ring-2 focus:ring-emerald-200
           hover:bg-emerald-800
           active:bg-emerald-700
@@ -145,7 +165,7 @@ function UrlForm() {
     return(
       <>
       <form
-        className="crtFont flex flex-col emerald"
+        className="crtFont flex flex-col emerald items-center"
         onSubmit = { (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           addUrl.mutate({ ...shortcut });
@@ -154,9 +174,16 @@ function UrlForm() {
         }}
       >
 
-        <div className="p-[10px] text-center border-2 bg-black border-emerald-400 selection:bg-emerald-900 selection:text-emerald-100">
-          <span className="green">{baseURL}/</span>
-          <span>{shortcut.slug}</span>
+
+
+        <div className="p-[10px] text-center border-2 break-all min-w-[300px]
+        bg-black border-emerald-400 selection:bg-emerald-900 selection:text-emerald-100">
+          {slugGenerating ? <ASCIIAnimation frames={progressAnimationFrames} rate={100} /> :
+          <>
+            <span className="green">{baseURL}/</span>
+            <span>{shortcut.slug}</span>
+          </>
+          }
         </div>
 
         {/* Regenerate options */}
@@ -164,7 +191,7 @@ function UrlForm() {
           <input
             type="button"
             value="CHARS"
-            className="py-[5px] px-[20px] mt-[10px] emerald border-2 mr-[10px]
+            className="py-[0px] px-[20px] mt-[10px] emerald border-2 mr-[10px]
             focus:outline-none focus:ring-2 focus:ring-emerald-200
             hover:bg-emerald-800
             active:bg-emerald-700
@@ -174,7 +201,7 @@ function UrlForm() {
           <input
             type="button"
             value="WORDS"
-            className="py-[5px] px-[20px] mt-[10px] emerald border-2
+            className="py-[0px] px-[20px] mt-[10px] emerald border-2
             focus:outline-none focus:ring-2 focus:ring-emerald-200
             hover:bg-emerald-800
             active:bg-emerald-700
@@ -187,7 +214,7 @@ function UrlForm() {
         <input
           type="submit"
           value="SAVE ->"
-          className="p-[10px] mt-[30px] emerald border-2 
+          className="p-[10px] mt-[40px] emerald border-2 xs:w-[300px] 
           focus:outline-none focus:ring-2 focus:ring-emerald-200
           hover:bg-emerald-800
           active:bg-emerald-700

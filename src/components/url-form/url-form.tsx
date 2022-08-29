@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import debounce from 'debounce';
 import copy from 'copy-to-clipboard';
 import { trpc } from '../../utils/trpc';
@@ -26,7 +26,8 @@ function UrlForm() {
   // Routine status states
   const [urlInputActivated, setUrlInputActivated] = useState(false);
   const [urlConfirmed, setUrlConfirmed] = useState(false);
-  const [slugGenerating, setSlugGenerating] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [shortcutCopied, setShortcutCopied] = useState(false);
 
   // DB comms settings
   const addUrl = trpc.useMutation(["addUrl"]);
@@ -36,6 +37,16 @@ function UrlForm() {
     refetchOnReconnect: false,
   });
 
+  // BaseURL for relative "slug" links rendering
+  const [baseURL, setBaseURL] = useState('');
+  useEffect(() => {
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    const baseURL = `${protocol}//${hostname}${port ? ':' + port : ''}`;
+    setBaseURL(baseURL);
+  }, []);
+
   // Frameset for `ASCIIAnimation` component used as progress indicator
   const progressAnimationFrames = [
     <> / PROCESSING /</>,
@@ -44,6 +55,8 @@ function UrlForm() {
     <> | PROCESSING |</>,
   ];
 
+
+  // Validate if the input is URL
   // TODO: implement proper URL validation
   function isValidURL(url: string) {
     try {
@@ -76,8 +89,7 @@ function UrlForm() {
       const url = urlElement.value;
       if (isValidURL(url)) {
 
-        // Set real URL state
-        // Using random string of chars for the "slug" by default
+        // Set real URL state using random string of chars for the "slug" by default
         setShortcut({ ...shortcut, url: url, slug: generateSlug("chars") });
 
         // Set urlConfirmed state flag for conditional rendering for the whole form
@@ -90,7 +102,7 @@ function UrlForm() {
   // Pseudo-randomly generates "slug" part of the URL (can also be a string of random chars)
   function generateSlug(type: string) {
 
-    setSlugGenerating(true);
+    setIsProcessing(true);
 
     let slug = '';
 
@@ -102,7 +114,7 @@ function UrlForm() {
       }
     } while (checkShortcut.data?.used); // Regenerate slug if we have the same one in DB already
 
-    setSlugGenerating(false);
+    setIsProcessing(false);
 
     return slug;
   }
@@ -110,9 +122,9 @@ function UrlForm() {
 
   // RENDERING
 
+  // Before the URL is entered and confirmed
   if (!urlConfirmed) {
     return(
-
       <form
         className="crtFont flex flex-col items-center"
         spellCheck="false"
@@ -149,41 +161,26 @@ function UrlForm() {
         />
 
       </form>
-
     );
   }
   
-  else {
-    console.log(shortcut.url);
-    console.log(shortcut.slug);
-
-    // Combine our baseURL
-    const protocol = window.location.protocol;
-    const hostname = window.location.hostname;
-    const port = window.location.port;
-    const baseURL = `${protocol}//${hostname}${port ? ':' + port : ''}`;
+  // After the URL is confirmed, "slug" generation, before the shortcut sent to DB
+  else if (addUrl.status !== "success") {
     return(
       <>
       <form
         className="crtFont flex flex-col emerald items-center"
         onSubmit = { (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
+          setIsProcessing(true);
           addUrl.mutate({ ...shortcut });
-          copy(`${baseURL}/${shortcut.slug}`)
-          console.log(addUrl.status);
         }}
       >
 
-
-
+        {/* Short URL field */}
         <div className="p-[10px] text-center border-2 break-all min-w-[300px]
         bg-black border-emerald-400 selection:bg-emerald-900 selection:text-emerald-100">
-          {slugGenerating ? <ASCIIAnimation frames={progressAnimationFrames} rate={100} /> :
-          <>
-            <span className="green">{baseURL}/</span>
-            <span>{shortcut.slug}</span>
-          </>
-          }
+          { isProcessing ? <ASCIIAnimation frames={progressAnimationFrames} rate={100} /> : <span>{baseURL}/{shortcut.slug}</span> }
         </div>
 
         {/* Regenerate options */}
@@ -195,7 +192,9 @@ function UrlForm() {
             focus:outline-none focus:ring-2 focus:ring-emerald-200
             hover:bg-emerald-800
             active:bg-emerald-700
-            bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer"
+            bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer
+            disabled:bg-stone-900 disabled:border-t-stone-700 disabled:border-l-stone-700 disabled:border-b-stone-800 disabled:border-r-stone-800 disabled:text-stone-400 disabled:cursor-not-allowed" 
+            disabled = { isProcessing }
             onClick = {() => setShortcut({ ...shortcut, slug: generateSlug("chars") })}
           />
           <input
@@ -205,12 +204,14 @@ function UrlForm() {
             focus:outline-none focus:ring-2 focus:ring-emerald-200
             hover:bg-emerald-800
             active:bg-emerald-700
-            bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer"
+            bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer
+            disabled:bg-stone-900 disabled:border-t-stone-700 disabled:border-l-stone-700 disabled:border-b-stone-800 disabled:border-r-stone-800 disabled:text-stone-400 disabled:cursor-not-allowed" 
+            disabled = { isProcessing }
             onClick = {() => setShortcut({ ...shortcut, slug: generateSlug("words") })}
           />
         </div>
 
-        {/* Submit, saves to DB */}
+        {/* Submit button, saves to DB (see form's `onSubmit`) */}
         <input
           type="submit"
           value="SAVE ->"
@@ -220,9 +221,8 @@ function UrlForm() {
           active:bg-emerald-700
           bg-emerald-900 border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer
           disabled:bg-stone-900 disabled:border-t-stone-700 disabled:border-l-stone-700 disabled:border-b-stone-800 disabled:border-r-stone-800 disabled:text-stone-400 disabled:cursor-not-allowed" 
-          disabled = { urlValue === '' || !urlInputActivated }
+          disabled = { isProcessing }
         />
-
 
       </form>
 
@@ -230,8 +230,45 @@ function UrlForm() {
         {/* <p>Click shortcut to SAVE and COPY</p> */}
         <p>Points to {shortcut.url}</p>
       </div>
-      </>
 
+      </>
+    );
+  }
+
+  // After the shortcut is saved to DB
+  else {
+    if (isProcessing) { setIsProcessing(false) }
+    return(
+      <>
+      <div className="crtFont flex flex-col emerald items-center">
+
+        <div className="crtFont mb-[20px] emerald text-center">
+          <p>Shortcut created</p>
+        </div>
+
+        {/* Short URL field */}
+        <input
+          type="button"
+          value={`${baseURL}/${shortcut.slug}`}
+          className="p-[10px] emerald border-2 break-all min-w-[300px]
+          focus:outline-none focus:ring-2 focus:ring-emerald-200
+          hover:bg-emerald-800
+          active:bg-emerald-700
+          bg-black border-t-emerald-300 border-l-emerald-300 border-b-emerald-500 border-r-emerald-500 cursor-pointer"
+          onClick = {(e) => {
+            copy(`${baseURL}/${shortcut.slug}`);
+            setShortcutCopied(true);
+          }}
+        />
+
+        <div className="crtFont mt-[20px] emerald text-center">
+          <p className={shortcutCopied ? 'visible' : 'invisible'}>COPIED</p>
+          <p className="mt-[20px]">Points to {shortcut.url}</p>
+          <p>Click the shortcut button to COPY</p>
+        </div>
+
+      </div>
+      </>
     );
   }
 

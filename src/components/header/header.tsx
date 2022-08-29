@@ -16,10 +16,18 @@ const animRight = [
   <><span className="text-stone-900">{'<'}</span><span className="text-stone-900">{'<'}</span><span className="text-stone-900">{'<'}</span></>,
 ];
 
+
 function Header() {
+
   return(
     <>
-        <h1 className="mt-4 font-glassTTYVT220 text-[40px]">
+        <h1
+          className="mt-4 font-glassTTYVT220 text-[40px] cursor-pointer"
+          onClick = { () => {
+            const _ = window.location;
+            _.href = `${_.protocol}//${_.hostname}${_.port ? ':' + _.port : ''}`
+          }}
+        >
           <ASCIIAnimation frames={animLeft} rate={300} />
           <span className="font-sans">&nbsp;&nbsp;</span>
           <span className="emerald">СЖАТО</span>

@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -8,6 +10,10 @@ module.exports = {
       fontFamily: {
         glassTTYVT220: ['Glass TTY VT220'],
       },
+    },
+    screens: {
+      'xs': '300px',
+      ...defaultTheme.screens,
     },
   },
   plugins: [],
